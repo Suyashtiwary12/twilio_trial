@@ -2,7 +2,7 @@
 import twilio from "twilio";
 
 const accountSid = "AC10d7504a42ac3772fa979488e734eec0"; // replace with your SID
-const authToken = "34d2662a58c90bf7ce77f82fd28aa4d4";   // replace with your token
+const authToken = "2dd485d799dd9ff4d8ff0bb997605d3b";   // replace with your token
 const client = twilio(accountSid, authToken);
 
 // Function to initiate a phone call
