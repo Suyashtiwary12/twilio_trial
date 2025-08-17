@@ -15,4 +15,4 @@ app.get("/start_call", async (req, res) => {
   res.json({ message: "Call initiated", result });
 });
 
-app.listen(8080, () => console.log("Server running on port 3000"));
+app.listen(8080, () => console.log("Server running on port 8080"));
