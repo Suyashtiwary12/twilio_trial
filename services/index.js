@@ -10,35 +10,40 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 // Incoming call handler
-export const handleCall= async(req, res) => {
-  const twiml = new VoiceResponse();
+export const handleCall = async (req, res) => {
+    const twiml = new VoiceResponse();
 
-  const gather = twiml.gather({
-    input: "speech",
-    action: "/process_speech",
-    speechTimeout: "auto"
-  });
+    const gather = twiml.gather({
+        input: "speech",
+        action: "https://twilio-trial.onrender.com/process_speech",
+        speechTimeout: "auto"
+    });
 
-  gather.say("Hello! Please tell me how I can help you today.");
+    gather.say("Hello! Please tell me how I can help you today.");
 
-  res.type("text/xml");
-  res.send(twiml.toString());
+    res.type("text/xml");
+    res.send(twiml.toString());
 };
 
 // Handle gathered speech
-export const processSpeech=async(req, res) => {
-  const userSpeech = req.body.SpeechResult; // already transcribed by Twilio
-  console.log("User said:", userSpeech);
+export const processSpeech = async (req, res) => {
+    try {
+        const userSpeech = req.body.SpeechResult;
+        console.log("User said:", userSpeech);
 
-  // Get AI response
-  const aiResponse = await askGemini(userSpeech);
+        const aiResponse = await askGemini(userSpeech);
+        if (!aiResponse) throw new Error("No AI response");
 
-  // Convert to speech (should return a PUBLIC URL)
-  const audioUrl = await textToSpeech(aiResponse);
+        const audioUrl = await textToSpeech(aiResponse);
+        if (!audioUrl) throw new Error("No audio URL");
 
-  const twiml = new VoiceResponse();
-  twiml.play(audioUrl);
+        const twiml = new VoiceResponse();
+        twiml.play(audioUrl);
 
-  res.type("text/xml");
-  res.send(twiml.toString());
+        res.type("text/xml");
+        res.send(twiml.toString());
+    } catch (err) {
+        console.error("Error in processSpeech:", err);
+        res.status(500).send("<Response><Say>Sorry, there was an error.</Say></Response>");
+    }
 };
