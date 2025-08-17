@@ -34,11 +34,11 @@ export const processSpeech = async (req, res) => {
         const aiResponse = await askGemini(userSpeech);
         if (!aiResponse) throw new Error("No AI response");
 
-        const audioUrl = await textToSpeech(aiResponse);
-        if (!audioUrl) throw new Error("No audio URL");
+        // const audioUrl = await textToSpeech(aiResponse);
+        // if (!audioUrl) throw new Error("No audio URL");
 
         const twiml = new VoiceResponse();
-        twiml.play(audioUrl);
+        twiml.say(aiResponse);
 
         res.type("text/xml");
         res.send(twiml.toString());
