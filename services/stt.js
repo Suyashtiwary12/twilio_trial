@@ -1,14 +1,20 @@
+import gTTS from "gtts";
+import path from "path";
+import { fileURLToPath } from "url";
 import fs from "fs";
-import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: "inVus87BpIXPGegXfCNwj85X", // put your API key in .env
-});
+// Fix __dirname since ESM doesn't have it
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-export async function speechToText(audioFile) {
-  const transcription = await openai.audio.transcriptions.create({
-    file: fs.createReadStream(audioFile),
-    model: "whisper-1", // OpenAI’s Whisper model
+export async function textToSpeech(text, filename = "output.mp3") {
+  return new Promise((resolve, reject) => {
+    const filepath = path.join(__dirname, filename);
+    const gtts = new gTTS(text, "en");
+
+    gtts.save(filepath, (err) => {
+      if (err) return reject(err);
+      resolve(filepath);
+    });
   });
-  return transcription.text;
 }

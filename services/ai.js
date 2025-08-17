@@ -37,7 +37,7 @@ export async function askGemini(prompt) {
     // Generate content
     const result = await model.generateContent(prompt);
 
-    // Extract text
+    
     const output = result.response?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     console.log("Gemini response:", output);

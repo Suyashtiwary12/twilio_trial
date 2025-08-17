@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import twilio from "twilio";
 import { askGemini } from "./ai.js";
-import { textToSpeech } from "./tts.js"; // should return a public URL
+import { textToSpeech } from "./tts.cjs"; // should return a public URL
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
